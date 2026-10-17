@@ -91,12 +91,13 @@ async function estimate() {
     }
 
     
+
 const km = result.routes[0].distance / 1000;
 
-// سعر الكيلومتر: 0.90 دولار
+// سعر الكيلومتر: 0.85 دولار
 // الذهاب والعودة: نحسب المسافة مرتين
 const totalKm = trip === 'return' ? km * 2 : km;
-let price = Math.max(3.5, 3 + totalKm * 0.90);
+let price = Math.max(3.5, 3 + totalKm * 0.85);
 
 // تعديل السعر حسب نوع السيارة
 const kind = document.getElementById('kind').value;
@@ -113,23 +114,6 @@ distance.textContent =
   ' | المكتب: $' + officeShare.toFixed(2) +
   ' | السائق: $' + driverShare.toFixed(2);
 
-    let price = Math.max(2.5, 1.5 + km * 0.30);
-
-    if (trip === 'return') price *= 1.75;
-
-    const kind = document.getElementById('kind').value;
-    if (kind === 'comfort') price *= 1.20;
-    if (kind === 'van') price *= 1.35;
-
-    amount.textContent = '$' + price.toFixed(2);
-    distance.textContent = km.toFixed(1) + ' كم تقريباً';
-
-  } catch (error) {
-    amount.textContent = 'تعذّر حساب السعر';
-    distance.textContent =
-      'تحقّق من العناوين أو حاول مجدداً';
-  }
-}
 
 
 function bookRide() {
