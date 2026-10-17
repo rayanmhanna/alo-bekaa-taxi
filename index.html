@@ -42,30 +42,73 @@ function setTrip(t, button) {
   estimate();
 }
 
-function estimate() {
-  const from = document.getElementById('from').value.trim().toLowerCase();
-  const to = document.getElementById('to').value.trim().toLowerCase();
-  let price = 15;
 
-  if (from.includes('زحل') || from.includes('زحلة') ||
-      from.includes('فرزل')) price = 12;
+async function estimate() {
+  const from = document.getElementById('from').value.trim();
+  const to = document.getElementById('to').value.trim();
+  const amount = document.getElementById('amount');
+  const distance = document.getElementById('distance');
 
-  if (to.includes('مطار') || to.includes('airport')) price = 40;
-  else if (to.includes('بيروت') || to.includes('beirut')) price = 35;
-  else if (to.includes('بعلبك')) price = 20;
-  else if (to.includes('شتورا') || to.includes('شتورة')) price = 15;
+  if (!from || !to) {
+    amount.textContent = 'أدخل الانطلاق والوجهة';
+    distance.textContent = 'بانتظار العناوين';
+    return;
+  }
 
-  if (trip === 'return') price = Math.round(price * 1.75);
+  amount.textContent = 'جارٍ حساب السعر...';
 
-  const kind = document.getElementById('kind').value;
-  if (kind === 'comfort') price = Math.round(price * 1.2);
-  if (kind === 'van') price = Math.round(price * 1.35);
+  try {
+    async function locate(address) {
+      const query = encodeURIComponent(address + ', Lebanon');
+      const response = await fetch(
+        'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + query
+      );
 
-  document.getElementById('amount').textContent =
-    '$' + Math.max(8, price - 5) + '–' + (price + 5);
-  document.getElementById('distance').textContent =
-    'تقدير تجريبي وليس سعراً مؤكداً';
+      if (!response.ok) throw new Error('Geocoding failed');
+
+      const results = await response.json();
+      if (!results.length) throw new Error('Address not found');
+
+      return results[0];
+    }
+
+    const start = await locate(from);
+    const end = await locate(to);
+
+    const routeUrl =
+      'https://router.project-osrm.org/route/v1/driving/' +
+      start.lon + ',' + start.lat + ';' +
+      end.lon + ',' + end.lat +
+      '?overview=false';
+
+    const response = await fetch(routeUrl);
+    if (!response.ok) throw new Error('Route failed');
+
+    const result = await response.json();
+
+    if (result.code !== 'Ok' || !result.routes.length) {
+      throw new Error('No route');
+    }
+
+    const km = result.routes[0].distance / 1000;
+    let price = Math.max(2.5, 1.5 + km * 0.30);
+
+    if (trip === 'return') price *= 1.75;
+
+    const kind = document.getElementById('kind').value;
+    if (kind === 'comfort') price *= 1.20;
+    if (kind === 'van') price *= 1.35;
+
+    amount.textContent = '$' + price.toFixed(2);
+    distance.textContent = km.toFixed(1) + ' كم تقريباً';
+
+  } catch (error) {
+    amount.textContent = 'تعذّر حساب السعر';
+    distance.textContent =
+      'تحقّق من العناوين أو حاول مجدداً';
+  }
 }
+
 
 function bookRide() {
   const from = document.getElementById('from').value.trim();
