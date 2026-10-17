@@ -90,7 +90,29 @@ async function estimate() {
       throw new Error('No route');
     }
 
-    const km = result.routes[0].distance / 1000;
+    
+const km = result.routes[0].distance / 1000;
+
+// سعر الكيلومتر: 0.90 دولار
+// الذهاب والعودة: نحسب المسافة مرتين
+const totalKm = trip === 'return' ? km * 2 : km;
+let price = Math.max(3.5, 3 + totalKm * 0.90);
+
+// تعديل السعر حسب نوع السيارة
+const kind = document.getElementById('kind').value;
+if (kind === 'comfort') price *= 1.20;
+if (kind === 'van') price *= 1.35;
+
+// حصة المكتب والسائق
+const officeShare = price * 0.10;
+const driverShare = price - officeShare;
+
+amount.textContent = '$' + price.toFixed(2);
+distance.textContent =
+  totalKm.toFixed(1) + ' كم تقريباً' +
+  ' | المكتب: $' + officeShare.toFixed(2) +
+  ' | السائق: $' + driverShare.toFixed(2);
+
     let price = Math.max(2.5, 1.5 + km * 0.30);
 
     if (trip === 'return') price *= 1.75;
