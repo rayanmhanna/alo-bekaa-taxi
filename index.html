@@ -116,6 +116,14 @@ distance.textContent =
 
 
 
+
+  } catch (error) {
+    amount.textContent = 'تعذّر حساب السعر';
+    distance.textContent = 'تحقّق من العناوين وحاول مجدداً';
+    return null;
+  }
+}
+
 function bookRide() {
   const from = document.getElementById('from').value.trim();
   const to = document.getElementById('to').value.trim();
