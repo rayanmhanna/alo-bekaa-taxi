@@ -4,49 +4,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#111">
 <title>Alo Beka'a Taxi</title>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 :root{--gold:#f5bd32;--ink:#111;--muted:#707070;--paper:#f5f6f8}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#171717}
-.top{background:#111;color:white;padding:24px 18px 28px;border-radius:0 0 25px 25px}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.top{background:#111;color:white;padding:23px 18px 27px;border-radius:0 0 25px 25px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:50px;height:50px;border-radius:15px;background:var(--gold);color:#111;display:grid;place-items:center;font-size:26px;font-weight:900}
+.logo{width:50px;height:50px;border-radius:15px;background:var(--gold);display:grid;place-items:center;font-size:26px;font-weight:900}
 .brand h1{font-size:21px;margin:0}
-.brand p{margin:4px 0 0;color:#d4d4d4;font-size:12px}
-.tag{display:inline-block;background:#292929;border:1px solid #484848;padding:7px 10px;border-radius:99px;margin-top:20px;font-size:12px;color:#ffe29a}
-.wrap{max-width:650px;margin:auto;padding:16px}
-.card{background:white;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 5px 18px #0000000a}
-.title{font-size:17px;font-weight:800;margin:0 0 14px}
-.field{margin:12px 0}
-.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
-.field input,.field select{width:100%;padding:13px 12px;border:1px solid #ddd;border-radius:12px;font:inherit;background:white}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.switches{display:flex;gap:8px;flex-wrap:wrap}
-.chip{border:1px solid #ddd;background:#fff;padding:9px 12px;border-radius:99px;font:inherit;font-size:13px;cursor:pointer}
+.brand p{margin:4px 0 0;color:#ddd;font-size:12px}
+.tag{display:inline-block;background:#292929;border:1px solid #484848;padding:7px 10px;border-radius:99px;margin-top:18px;font-size:12px;color:#ffe29a}
+.wrap{max-width:720px;margin:auto;padding:16px}
+.card{background:white;border-radius:18px;padding:17px;margin-bottom:14px;box-shadow:0 5px 18px #0000000a}
+.title{font-size:18px;font-weight:850;margin:0 0 14px}
+.tabs,.switches,.maptools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:1px solid #ddd;background:white;padding:9px 12px;border-radius:99px;font-size:13px}
 .chip.active{background:#fff4cf;border-color:var(--gold);font-weight:800}
-.map{height:190px;border-radius:15px;background:linear-gradient(135deg,#e4eddf,#d9e7ef);position:relative;overflow:hidden;display:grid;place-items:center;text-align:center;color:#36463c}
-.map:before,.map:after{content:"";position:absolute;width:150%;height:15px;background:#fff;transform:rotate(-25deg);top:40%;box-shadow:0 24px 0 #fff,0 48px 0 #fff,0 72px 0 #fff}
-.map:after{transform:rotate(40deg);top:30%;opacity:.85}
-.maptxt{position:relative;z-index:1;background:#ffffffdb;border-radius:12px;padding:10px 14px;font-size:13px}
-.pin{font-size:26px}
-.price{background:#111;color:white;border-radius:16px;padding:17px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
-.price small{color:#d7d7d7;display:block;line-height:1.8}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}
+.field input,.field select{width:100%;padding:13px 12px;border:1px solid #ddd;border-radius:12px;background:white;min-height:48px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#map{height:300px;border-radius:15px;border:1px solid #ddd;z-index:1}
+.maphelp,.notice{font-size:12px;color:var(--muted);line-height:1.7}
+.price{background:#111;color:white;border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+.price small{color:#ddd;display:block;line-height:1.8}
 .amount{font-size:25px;font-weight:900;color:var(--gold);white-space:nowrap}
-.primary{width:100%;border:0;border-radius:13px;background:var(--gold);padding:15px;font-size:16px;font-weight:900;margin-top:14px;cursor:pointer}
-.secondary{width:100%;border:1px solid #ddd;background:white;border-radius:12px;padding:12px;font:inherit;margin-top:9px;cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}
-.notice{font-size:12px;color:var(--muted);line-height:1.7}
-.tabs{display:flex;gap:8px;margin-bottom:14px}
-.tabs button{flex:1}
+.primary,.secondary{width:100%;border-radius:13px;padding:14px;margin-top:10px;font-weight:850}
+.primary{border:0;background:var(--gold)}
+.secondary{border:1px solid #ddd;background:white;font-weight:650}
+button:disabled{opacity:.55;cursor:wait}
 .status{display:none;background:#e8f7e9;border:1px solid #b7e2bb;padding:12px;border-radius:12px;margin-top:12px;font-size:13px;line-height:1.7}
+.status.error{background:#fff0f0;border-color:#efbaba}
+.grid-services{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .foot{text-align:center;color:#777;font-size:11px;padding:8px 0 28px}
-@media(min-width:550px){.wrap{padding-top:22px}}
+.hidden{display:none!important}
+@media(max-width:430px){.price{align-items:flex-start}.amount{font-size:22px}#map{height:270px}}
 </style>
 </head>
-
 <body>
 <header class="top">
   <div class="brand">
@@ -56,308 +55,496 @@ button:disabled{opacity:.6;cursor:wait}
       <p>مشوارك علينا — البقاع وكل لبنان</p>
     </div>
   </div>
-  <div class="tag">نسخة تجريبية للعرض • الدفع كاش</div>
+  <div class="tag">نسخة تجريبية • تأكيد الطلب عبر واتساب</div>
 </header>
 
 <main class="wrap">
 <section class="card">
   <div class="tabs">
-    <button class="chip active" id="customerTab" onclick="setMode('customer')">طلب مشوار</button>
-    <button class="chip" id="driverTab" onclick="setMode('driver')">واجهة السائق</button>
+    <button class="chip active" id="customerTab" type="button">طلب مشوار</button>
+    <button class="chip" id="driverTab" type="button">واجهة السائق التجريبية</button>
   </div>
 
   <div id="customerView">
     <h2 class="title">وين بدك نوصّلك؟</h2>
 
-    <div class="switches" id="tripSwitches" style="margin-bottom:12px">
-      <button class="chip active" onclick="setTrip('now',this)">هلّق</button>
-      <button class="chip" onclick="setTrip('later',this)">حجز مسبق</button>
-      <button class="chip" onclick="setTrip('return',this)">ذهاب وإياب</button>
+    <div class="switches" id="tripSwitches">
+      <button class="chip active" data-trip="now" type="button">هلّق</button>
+      <button class="chip" data-trip="later" type="button">حجز مسبق</button>
+      <button class="chip" data-trip="return" type="button">ذهاب وإياب</button>
+    </div>
+
+    <div id="scheduleField" class="field hidden">
+      <label for="rideTime">وقت المشوار المطلوب</label>
+      <input id="rideTime" type="datetime-local">
     </div>
 
     <div class="field">
-      <label for="from">📍 من وين بدك ننطلق؟</label>
-      <input id="from" placeholder="مثلاً: زحلة، الفرزل، بعلبك" value="زحلة">
+      <label for="from">📍 نقطة الانطلاق</label>
+      <input id="from" placeholder="مثلاً: زحلة، الفرزل، بعلبك" value="زحلة، لبنان">
     </div>
 
     <div class="field">
-      <label for="to">🏁 لوين بدك تروح؟</label>
-      <input id="to" placeholder="مثلاً: بيروت، مطار بيروت" value="مطار بيروت الدولي">
+      <label for="to">🏁 الوجهة</label>
+      <input id="to" placeholder="مثلاً: مطار بيروت الدولي" value="مطار بيروت الدولي، لبنان">
     </div>
+
+    <div class="maptools">
+      <button class="chip active" id="pickFrom" type="button">حدّد الانطلاق على الخريطة</button>
+      <button class="chip" id="pickTo" type="button">حدّد الوجهة على الخريطة</button>
+      <button class="chip" id="locateMe" type="button">استخدم موقعي الحالي</button>
+    </div>
+
+    <div id="map"></div>
+    <p class="maphelp" id="mapHelp">اضغط على الخريطة لتحديد الموقع المختار، أو اكتب العنوان يدوياً.</p>
 
     <div class="two">
       <div class="field">
         <label for="kind">نوع السيارة</label>
         <select id="kind">
           <option value="standard">تاكسي عادي</option>
-          <option value="comfort">سيارة مريحة</option>
-          <option value="van">فان / عائلة</option>
+          <option value="comfort">سيارة مريحة (+20%)</option>
+          <option value="van">فان / عائلة (+35%)</option>
         </select>
       </div>
       <div class="field">
         <label for="people">عدد الركاب</label>
         <select id="people">
-          <option>1</option><option selected>2</option><option>3</option>
-          <option>4</option><option>5</option><option>6</option>
+          <option>1</option>
+          <option selected>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
         </select>
-      </div>
-    </div>
-
-    <div class="map">
-      <div class="maptxt">
-        <div class="pin">📍 🚕 🏁</div>
-        <strong>معاينة الخريطة</strong><br>
-        تحديد المواقع على الخريطة يحتاج ربطاً إضافياً
-      </div>
-    </div>
-
-    <div class="field">
-      <label>اختيار الموقع</label>
-      <div class="switches">
-        <button class="chip" onclick="fillFromLocation()">استخدم موقعي الحالي</button>
-        <button class="chip" onclick="document.getElementById('from').focus()">اكتب العنوان يدوياً</button>
       </div>
     </div>
 
     <div class="price">
       <div>
         <strong>السعر التقديري</strong>
-        <small id="distance">اضغط احسب السعر من جديد</small>
+        <small id="distance">اضغط «احسب المسافة والسعر»</small>
+        <small id="split"></small>
       </div>
       <div class="amount" id="amount">—</div>
     </div>
 
-    <button class="primary" id="bookButton" onclick="bookRide()">اطلب تاكسي 🚕</button>
-    <button class="secondary" id="estimateButton" onclick="estimate()">احسب السعر من جديد</button>
-    <div class="status" id="bookingStatus"></div>
+    <button class="secondary" id="estimateButton" type="button">احسب المسافة والسعر</button>
+    <button class="primary" id="bookButton" type="button">اطلب تاكسي عبر واتساب 🚕</button>
+    <div class="status" id="status"></div>
 
     <p class="notice">
-      السعر تجريبي ويعتمد على توفر خدمة الخرائط. حصة المكتب تقديرية،
-      والسائق يتحمل مصاريف البنزين والصيانة. لا يُعتبر الطلب مؤكداً
-      حتى يتم التواصل مع المكتب.
+      التسعيرة الحالية تجريبية وقابلة للتعديل. حصة المكتب افتراضياً 10% من الأجرة،
+      وحصة السائق قبل البنزين والصيانة. هذا النموذج لا يوزع الطلبات تلقائياً على السائقين.
     </p>
   </div>
 
-  <div id="driverView" style="display:none">
-    <h2 class="title">أهلاً بالسائق 👋</h2>
-    <p>واجهة تجريبية. استقبال الطلبات الفعلية يحتاج نظاماً خلفياً.</p>
+  <div id="driverView" class="hidden">
+    <h2 class="title">واجهة السائق</h2>
+    <p>واجهة عرض فقط؛ استقبال الطلبات المباشرة يحتاج خادماً وقاعدة بيانات.</p>
     <div class="price">
-      <div><strong>حالة السائق</strong><small id="driverStatus">غير متصل</small></div>
-      <button class="chip" onclick="toggleDriver(this)">تفعيل / إيقاف</button>
+      <div>
+        <strong>حالة العرض</strong>
+        <small id="driverStatus">غير متصل (تجريبي)</small>
+      </div>
+      <button class="chip" id="toggleDriver" type="button">تبديل الحالة</button>
     </div>
-    <button class="secondary" onclick="alert('المحادثات والإشعارات غير مفعّلة بعد.')">💬 محادثات الزبائن</button>
   </div>
 </section>
 
 <section class="card">
   <h2 class="title">خدماتنا</h2>
-  <div class="two">
+  <div class="grid-services">
     <div>✈️ <strong>مشاوير المطار</strong><p class="notice">من البقاع إلى مطار بيروت وبالعكس</p></div>
     <div>🗺️ <strong>كل لبنان</strong><p class="notice">مشاوير محلية وبين المحافظات</p></div>
-    <div>🕒 <strong>حجز مسبق</strong><p class="notice">حدد الوقت المناسب إلك</p></div>
-    <div>💬 <strong>تواصل مباشر</strong><p class="notice">عبر واتساب</p></div>
+    <div>🕒 <strong>حجز مسبق</strong><p class="notice">حدد الوقت المناسب</p></div>
+    <div>💬 <strong>تواصل مباشر</strong><p class="notice">إرسال التفاصيل عبر واتساب</p></div>
   </div>
 </section>
 
-<div class="foot">Alo Beka'a Taxi © نموذج أولي — لا يؤكد الحجز تلقائياً</div>
+<div class="foot">Alo Beka'a Taxi © نموذج أولي — غير مخصص لتأكيد الحجوزات آلياً</div>
 </main>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+'use strict';
+
+// إعدادات التسعيرة التجريبية.
+// الأجرة = 3$ + 0.85$ لكل كم، والحد الأدنى 3.50$.
+// عمولة المكتب الافتراضية 10%، ويجب مراجعة هذه الأرقام قبل التشغيل التجاري.
+const CONFIG = {
+  whatsappNumber: '96170307104',
+  baseFare: 3,
+  perKm: 0.85,
+  minimumFare: 3.5,
+  officeCommission: 0.10,
+  multipliers: {standard: 1, comfort: 1.2, van: 1.35},
+  center: [33.8463, 35.902],
+  zoom: 9
+};
+
+const $ = id => document.getElementById(id);
+
 let trip = 'now';
+let map = null;
+let startMarker = null;
+let endMarker = null;
+let routeLayer = null;
+let activePick = 'from';
+let startPoint = null;
+let endPoint = null;
 let driverOnline = false;
 let lastFare = null;
-let calculationId = 0;
+let requestSequence = 0;
+
+function showStatus(message, error = false) {
+  $('status').textContent = message;
+  $('status').classList.toggle('error', error);
+  $('status').style.display = 'block';
+}
+
+function clearStatus() {
+  $('status').style.display = 'none';
+}
 
 function setMode(mode) {
   const customer = mode === 'customer';
-
-  document.getElementById('customerView').style.display =
-    customer ? 'block' : 'none';
-  document.getElementById('driverView').style.display =
-    customer ? 'none' : 'block';
-
-  document.getElementById('customerTab').classList.toggle('active', customer);
-  document.getElementById('driverTab').classList.toggle('active', !customer);
+  $('customerView').classList.toggle('hidden', !customer);
+  $('driverView').classList.toggle('hidden', customer);
+  $('customerTab').classList.toggle('active', customer);
+  $('driverTab').classList.toggle('active', !customer);
+  if (customer && map) setTimeout(() => map.invalidateSize(), 100);
 }
 
-function setTrip(value, button) {
+function setTrip(value) {
   trip = value;
-
-  document.querySelectorAll('#tripSwitches .chip').forEach(item => {
-    item.classList.remove('active');
+  document.querySelectorAll('[data-trip]').forEach(button => {
+    button.classList.toggle('active', button.dataset.trip === value);
   });
-
-  button.classList.add('active');
-  lastFare = null;
-  document.getElementById('amount').textContent = '—';
-  document.getElementById('distance').textContent =
-    'اضغط احسب السعر من جديد';
+  $('scheduleField').classList.toggle('hidden', value !== 'later');
+  invalidateFare();
 }
 
-async function locateAddress(address) {
-  const query = encodeURIComponent(address + ', Lebanon');
-  const response = await fetch(
-    'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + query
-  );
+function invalidateFare() {
+  lastFare = null;
+  $('amount').textContent = '—';
+  $('distance').textContent = 'احسب السعر بعد تغيير العناوين أو نوع المشوار';
+  $('split').textContent = '';
+}
 
-  if (!response.ok) {
-    throw new Error('تعذّر البحث عن العنوان');
+function initMap() {
+  if (!window.L) {
+    $('mapHelp').textContent = 'تعذّر تحميل الخريطة. تحقق من الإنترنت وأعد تحميل الصفحة.';
+    return;
   }
+
+  map = L.map('map').setView(CONFIG.center, CONFIG.zoom);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  map.on('click', async event => {
+    await setPoint(activePick, {
+      lat: event.latlng.lat,
+      lon: event.latlng.lng
+    }, true);
+  });
+}
+
+function updateMarker(which, point) {
+  if (!map) return;
+
+  const isFrom = which === 'from';
+  let marker = isFrom ? startMarker : endMarker;
+  const label = isFrom ? 'الانطلاق' : 'الوجهة';
+
+  if (marker) {
+    marker.setLatLng([point.lat, point.lon]).bindPopup(label);
+  } else {
+    marker = L.marker([point.lat, point.lon]).addTo(map).bindPopup(label);
+    if (isFrom) startMarker = marker;
+    else endMarker = marker;
+  }
+}
+
+async function reverseGeocode(point) {
+  const url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='
+    + encodeURIComponent(point.lat)
+    + '&lon=' + encodeURIComponent(point.lon);
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('reverse lookup failed');
+
+  const data = await response.json();
+  return data.display_name || '';
+}
+
+async function setPoint(which, point, updateAddress) {
+  if (which === 'from') startPoint = point;
+  else endPoint = point;
+
+  updateMarker(which, point);
+
+  if (updateAddress) {
+    $(which).value = 'جارٍ تحديد العنوان...';
+
+    try {
+      $(which).value = await reverseGeocode(point)
+        || point.lat.toFixed(5) + ', ' + point.lon.toFixed(5);
+    } catch (_) {
+      $(which).value = point.lat.toFixed(5) + ', ' + point.lon.toFixed(5);
+    }
+
+    point.addressText = $(which).value;
+  }
+
+  invalidateFare();
+}
+
+async function geocode(address) {
+  const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=lb&q='
+    + encodeURIComponent(address);
+
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('خدمة البحث عن العنوان غير متاحة');
 
   const results = await response.json();
+  if (!results.length) throw new Error('لم يتم العثور على العنوان: ' + address);
 
-  if (!results.length) {
-    throw new Error('العنوان غير موجود');
+  return {
+    lat: Number(results[0].lat),
+    lon: Number(results[0].lon),
+    addressText: address
+  };
+}
+
+async function resolvePoints() {
+  const from = $('from').value.trim();
+  const to = $('to').value.trim();
+
+  if (!from || !to) {
+    throw new Error('اكتب نقطة الانطلاق والوجهة أولاً.');
   }
 
-  return results[0];
+  if (!startPoint || startPoint.addressText !== from) {
+    startPoint = await geocode(from);
+  }
+
+  if (!endPoint || endPoint.addressText !== to) {
+    endPoint = await geocode(to);
+  }
+
+  updateMarker('from', startPoint);
+  updateMarker('to', endPoint);
+
+  if (map) {
+    map.fitBounds([
+      [startPoint.lat, startPoint.lon],
+      [endPoint.lat, endPoint.lon]
+    ], {padding: [25, 25]});
+  }
 }
 
 async function estimate() {
-  const thisCalculation = ++calculationId;
-  const from = document.getElementById('from').value.trim();
-  const to = document.getElementById('to').value.trim();
-  const amount = document.getElementById('amount');
-  const distance = document.getElementById('distance');
-  const estimateButton = document.getElementById('estimateButton');
+  const sequence = ++requestSequence;
+  const button = $('estimateButton');
 
-  lastFare = null;
-
-  if (!from || !to) {
-    amount.textContent = 'أدخل العنوانين';
-    distance.textContent = 'الانطلاق والوجهة مطلوبان';
-    return null;
-  }
-
-  amount.textContent = 'جارٍ الحساب...';
-  distance.textContent = 'قد يستغرق الحساب بضع ثوانٍ';
-  estimateButton.disabled = true;
+  button.disabled = true;
+  clearStatus();
+  $('amount').textContent = 'جارٍ الحساب...';
+  $('distance').textContent = 'البحث عن العناوين والمسار';
 
   try {
-    const start = await locateAddress(from);
-    const end = await locateAddress(to);
+    await resolvePoints();
 
     const routeUrl =
-      'https://router.project-osrm.org/route/v1/driving/' +
-      start.lon + ',' + start.lat + ';' +
-      end.lon + ',' + end.lat + '?overview=false';
+      'https://router.project-osrm.org/route/v1/driving/'
+      + startPoint.lon + ',' + startPoint.lat + ';'
+      + endPoint.lon + ',' + endPoint.lat
+      + '?overview=full&geometries=geojson';
 
     const response = await fetch(routeUrl);
+    if (!response.ok) throw new Error('خدمة حساب الطريق غير متاحة حالياً');
 
-    if (!response.ok) {
-      throw new Error('تعذّر جلب الطريق');
+    const data = await response.json();
+
+    if (data.code !== 'Ok' || !data.routes || !data.routes.length) {
+      throw new Error('لم يتم العثور على طريق مناسب');
     }
 
-    const result = await response.json();
+    if (sequence !== requestSequence) return null;
 
-    if (result.code !== 'Ok' || !result.routes || !result.routes.length) {
-      throw new Error('لم يتم العثور على مسار');
-    }
-
-    if (thisCalculation !== calculationId) return null;
-
-    const oneWayKm = result.routes[0].distance / 1000;
+    const oneWayKm = data.routes[0].distance / 1000;
     const totalKm = trip === 'return' ? oneWayKm * 2 : oneWayKm;
+    const multiplier = CONFIG.multipliers[$('kind').value] || 1;
 
-    let price = Math.max(3.5, 3 + totalKm * 0.85);
-    const kind = document.getElementById('kind').value;
+    const fare = Math.round(
+      Math.max(CONFIG.minimumFare, CONFIG.baseFare + totalKm * CONFIG.perKm)
+      * multiplier * 100
+    ) / 100;
 
-    if (kind === 'comfort') price *= 1.20;
-    if (kind === 'van') price *= 1.35;
+    const office = Math.round(fare * CONFIG.officeCommission * 100) / 100;
+    const driver = Math.round((fare - office) * 100) / 100;
 
-    price = Math.round(price * 100) / 100;
-    const officeShare = Math.round(price * 0.10 * 100) / 100;
-    const driverShare = Math.round((price - officeShare) * 100) / 100;
+    lastFare = {fare, oneWayKm, totalKm, office, driver};
 
-    lastFare = { price, totalKm, officeShare, driverShare, from, to, trip, kind };
+    $('amount').textContent = '$' + fare.toFixed(2);
+    $('distance').textContent = totalKm.toFixed(1) + ' كم تقريباً'
+      + (trip === 'return' ? ' (ذهاب وإياب)' : '');
 
-    amount.textContent = '$' + price.toFixed(2);
-    distance.textContent =
-      totalKm.toFixed(1) + ' كم تقريباً' +
-      ' | المكتب: $' + officeShare.toFixed(2) +
-      ' | السائق: $' + driverShare.toFixed(2);
+    $('split').textContent =
+      'المكتب: $' + office.toFixed(2)
+      + ' • السائق قبل المصاريف: $' + driver.toFixed(2);
+
+    if (map && data.routes[0].geometry) {
+      if (routeLayer) map.removeLayer(routeLayer);
+
+      routeLayer = L.geoJSON(data.routes[0].geometry, {
+        style: {color: '#d89c00', weight: 5, opacity: 0.85}
+      }).addTo(map);
+
+      routeLayer.bringToFront();
+    }
 
     return lastFare;
   } catch (error) {
-    if (thisCalculation === calculationId) {
-      amount.textContent = 'تعذّر حساب السعر';
-      distance.textContent = 'تحقّق من العناوين وحاول مجدداً';
+    if (sequence === requestSequence) {
+      $('amount').textContent = 'تعذّر حساب السعر';
+      $('distance').textContent = error.message || 'تحقق من العناوين وحاول مجدداً';
+      $('split').textContent = '';
+      showStatus(
+        (error.message || 'تعذّر الحساب')
+        + '. جرّب لاحقاً أو راجع كتابة العناوين.',
+        true
+      );
     }
     return null;
   } finally {
-    estimateButton.disabled = false;
+    if (sequence === requestSequence) button.disabled = false;
   }
 }
 
 async function bookRide() {
-  const from = document.getElementById('from').value.trim();
-  const to = document.getElementById('to').value.trim();
-
-  if (!from || !to) {
-    alert('اكتب نقطة الانطلاق والوجهة أولاً.');
-    return;
-  }
-
-  const bookingButton = document.getElementById('bookButton');
-  const status = document.getElementById('bookingStatus');
-
-  bookingButton.disabled = true;
-  bookingButton.textContent = 'جارٍ حساب السعر...';
-  status.style.display = 'none';
+  const button = $('bookButton');
+  button.disabled = true;
+  button.textContent = 'جارٍ تجهيز الطلب...';
 
   try {
     const fare = await estimate();
+    if (!fare) return;
 
-    if (!fare) {
-      alert('لم نستطع حساب السعر. تحقق من العناوين وحاول مجدداً.');
-      return;
-    }
-
-    const people = document.getElementById('people').value;
-    const kindSelect = document.getElementById('kind');
-    const kindText = kindSelect.options[kindSelect.selectedIndex].text;
-
-    const tripText = {
+    const kindSelect = $('kind');
+    const tripLabels = {
       now: 'هلّق',
       later: 'حجز مسبق',
       return: 'ذهاب وإياب'
-    }[trip];
+    };
 
-    const message =
-      '🚕 طلب مشوار جديد - Alo Beka\'a Taxi\n' +
-      '📍 الانطلاق: ' + from + '\n' +
-      '🏁 الوجهة: ' + to + '\n' +
-      '🚘 نوع السيارة: ' + kindText + '\n' +
-      '👥 عدد الركاب: ' + people + '\n' +
-      '🕒 نوع الطلب: ' + tripText + '\n' +
-      '📏 المسافة التقديرية: ' + fare.totalKm.toFixed(1) + ' كم\n' +
-      '💰 أجرة الراكب: $' + fare.price.toFixed(2) + '\n' +
-      '🏢 حصة المكتب التقديرية (10%): $' + fare.officeShare.toFixed(2) + '\n' +
-      '🚖 حصة السائق قبل المصاريف: $' + fare.driverShare.toFixed(2);
+    const lines = [
+      '🚕 طلب مشوار جديد - Alo Beka’a Taxi',
+      '📍 الانطلاق: ' + $('from').value.trim(),
+      '🏁 الوجهة: ' + $('to').value.trim(),
+      '🚘 نوع السيارة: ' + kindSelect.options[kindSelect.selectedIndex].text,
+      '👥 عدد الركاب: ' + $('people').value,
+      '🕒 نوع الطلب: ' + tripLabels[trip],
+      ...(trip === 'later'
+        ? ['📅 الموعد: ' + ($('rideTime').value || 'لم يحدد')]
+        : []),
+      '📏 المسافة المقدرة: ' + fare.totalKm.toFixed(1) + ' كم',
+      '💰 الأجرة التقديرية: $' + fare.fare.toFixed(2),
+      '🏢 حصة المكتب التقديرية: $' + fare.office.toFixed(2),
+      '🚖 حصة السائق قبل المصاريف: $' + fare.driver.toFixed(2),
+      '⚠️ يرجى تأكيد السعر والتوفر مع المكتب.'
+    ];
 
-    const whatsappUrl =
-      'https://wa.me/96170307104?text=' + encodeURIComponent(message);
+    showStatus('تم تجهيز تفاصيل المشوار. سيتم فتح واتساب لإرسال الطلب.');
 
-    status.style.display = 'block';
-    status.textContent = 'تم تجهيز الرسالة. سيتم فتح واتساب لإكمال الطلب.';
-
-    window.location.href = whatsappUrl;
+    window.location.href = 'https://wa.me/'
+      + CONFIG.whatsappNumber
+      + '?text=' + encodeURIComponent(lines.join('\n'));
   } finally {
-    bookingButton.disabled = false;
-    bookingButton.textContent = 'اطلب تاكسي 🚕';
+    button.disabled = false;
+    button.textContent = 'اطلب تاكسي عبر واتساب 🚕';
   }
 }
 
-function fillFromLocation() {
-  alert('تحديد GPS غير مفعّل بعد. اكتب عنوانك يدوياً.');
+function useMyLocation() {
+  if (!navigator.geolocation) {
+    showStatus('المتصفح لا يدعم تحديد الموقع. اكتب العنوان يدوياً.', true);
+    return;
+  }
+
+  $('locateMe').disabled = true;
+
+  navigator.geolocation.getCurrentPosition(async position => {
+    const point = {
+      lat: position.coords.latitude,
+      lon: position.coords.longitude
+    };
+
+    if (map) map.setView([point.lat, point.lon], 15);
+
+    await setPoint('from', point, true);
+    $('locateMe').disabled = false;
+  }, () => {
+    showStatus(
+      'لم نستطع تحديد موقعك. اسمح باستخدام الموقع أو اكتب العنوان يدوياً.',
+      true
+    );
+    $('locateMe').disabled = false;
+  }, {
+    enableHighAccuracy: true,
+    timeout: 12000
+  });
 }
 
-function toggleDriver(button) {
-  driverOnline = !driverOnline;
-  document.getElementById('driverStatus').textContent =
-    driverOnline ? 'متصل (تجريبي)' : 'غير متصل';
-  button.classList.toggle('active', driverOnline);
+function chooseMapTarget(which) {
+  activePick = which;
+  $('pickFrom').classList.toggle('active', which === 'from');
+  $('pickTo').classList.toggle('active', which === 'to');
+
+  $('mapHelp').textContent = which === 'from'
+    ? 'اضغط على الخريطة لاختيار نقطة الانطلاق.'
+    : 'اضغط على الخريطة لاختيار الوجهة.';
 }
+
+$('customerTab').addEventListener('click', () => setMode('customer'));
+$('driverTab').addEventListener('click', () => setMode('driver'));
+
+$('tripSwitches').addEventListener('click', event => {
+  const button = event.target.closest('[data-trip]');
+  if (button) setTrip(button.dataset.trip);
+});
+
+$('pickFrom').addEventListener('click', () => chooseMapTarget('from'));
+$('pickTo').addEventListener('click', () => chooseMapTarget('to'));
+$('locateMe').addEventListener('click', useMyLocation);
+$('estimateButton').addEventListener('click', estimate);
+$('bookButton').addEventListener('click', bookRide);
+
+$('toggleDriver').addEventListener('click', () => {
+  driverOnline = !driverOnline;
+  $('driverStatus').textContent = driverOnline
+    ? 'متصل (تجريبي فقط)'
+    : 'غير متصل (تجريبي)';
+  $('toggleDriver').classList.toggle('active', driverOnline);
+});
+
+['from', 'to'].forEach(id => {
+  $(id).addEventListener('input', () => {
+    if (id === 'from') startPoint = null;
+    else endPoint = null;
+    invalidateFare();
+  });
+});
+
+['kind', 'people', 'rideTime'].forEach(id => {
+  $(id).addEventListener('change', invalidateFare);
+});
+
+initMap();
 </script>
 </body>
 </html>
