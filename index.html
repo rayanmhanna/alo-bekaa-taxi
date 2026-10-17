@@ -21,5 +21,99 @@
 <section class="card"><h2 class="title">خدماتنا</h2><div class="two"><div>✈️ <strong>مشاوير المطار</strong><p class="notice">من البقاع إلى مطار بيروت وبالعكس</p></div><div>🗺️ <strong>كل لبنان</strong><p class="notice">مشاوير محلية وبين المحافظات</p></div><div>🕒 <strong>حجز مسبق</strong><p class="notice">حدّد الوقت المناسب إلك</p></div><div>💬 <strong>تواصل مباشر</strong><p class="notice">ميزة قيد التطوير</p></div></div></section>
 <div class="foot">Alo Beka'a Taxi © نموذج أولي — غير مخصص للحجوزات الحقيقية</div></main>
 <script>
-let trip='now',driverOnline=false;function setMode(m){let c=m==='customer';document.getElementById('customerView').style.display=c?'block':'none';document.getElementById('driverView').style.display=c?'none':'block';document.getElementById('customerTab').classList.toggle('active',c);document.getElementById('driverTab').classList.toggle('active',!c)}function setTrip(t,b){trip=t;document.querySelectorAll('#customerView .switches .chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');estimate()}function estimate(){let a=document.getElementById('from').value.trim().toLowerCase(),b=document.getElementById('to').value.trim().toLowerCase();let price=15;if(a.includes('زحل')||a.includes('زحلة')||a.includes('فرزل'))price=12;if(b.includes('مطار')||b.includes('airport'))price=40;else if(b.includes('بيروت')||b.includes('beirut'))price=35;else if(b.includes('بعلبك'))price=20;else if(b.includes('شتورا')||b.includes('شتورة'))price=15;if(trip==='return')price=Math.round(price*1.75);let mult=document.getElementById('kind').value==='comfort'?1.2:document.getElementById('kind').value==='van'?1.35:1;price=Math.round(price*mult);document.getElementById('amount').textContent='$'+Math.max(8,price-5)+'–'+(price+5);document.getElementById('distance').textContent=trip==='later'?'حجز مسبق • السعر تقديري':'تقدير تجريبي حسب الوجهة'}function bookRide(){let f=document.getElementById('from').value.trim(),t=document.getElementById('to').value.trim();if(!f||!t){alert('اكتب نقطة الانطلاق والوجهة أولاً.');return}let s=document.getElementById('bookingStatus');s.style.display='block';s.textContent='تم تجهيز طلب تجريبي من '+f+' إلى '+t+'. لا يوجد سائق متصل حالياً لأن النظام غير مربوط بعد.'}function fillFromLocation(){alert('تحديد موقع GPS الحقيقي يحتاج ربط التطبيق بصلاحية الموقع. اكتب عنوانك يدوياً حالياً.')}function toggleDriver(b){driverOnline=!driverOnline;document.getElementById('driverStatus').textContent=driverOnline?'متصل (تجريبي)':'غير متصل';b.classList.toggle('active',driverOnline)}document.getElementById('from').addEventListener('input',estimate);document.getElementById('to').addEventListener('input',estimate);document.getElementById('kind').addEventListener('change',estimate);estimate();
+let trip = 'now';
+let driverOnline = false;
+
+function setMode(m) {
+  const customer = m === 'customer';
+  document.getElementById('customerView').style.display =
+    customer ? 'block' : 'none';
+  document.getElementById('driverView').style.display =
+    customer ? 'none' : 'block';
+  document.getElementById('customerTab').classList.toggle('active', customer);
+  document.getElementById('driverTab').classList.toggle('active', !customer);
+}
+
+function setTrip(t, button) {
+  trip = t;
+  document.querySelectorAll('#customerView .switches .chip')
+    .forEach(x => x.classList.remove('active'));
+  button.classList.add('active');
+  estimate();
+}
+
+function estimate() {
+  const from = document.getElementById('from').value.trim().toLowerCase();
+  const to = document.getElementById('to').value.trim().toLowerCase();
+  let price = 15;
+
+  if (from.includes('زحل') || from.includes('زحلة') ||
+      from.includes('فرزل')) price = 12;
+
+  if (to.includes('مطار') || to.includes('airport')) price = 40;
+  else if (to.includes('بيروت') || to.includes('beirut')) price = 35;
+  else if (to.includes('بعلبك')) price = 20;
+  else if (to.includes('شتورا') || to.includes('شتورة')) price = 15;
+
+  if (trip === 'return') price = Math.round(price * 1.75);
+
+  const kind = document.getElementById('kind').value;
+  if (kind === 'comfort') price = Math.round(price * 1.2);
+  if (kind === 'van') price = Math.round(price * 1.35);
+
+  document.getElementById('amount').textContent =
+    '$' + Math.max(8, price - 5) + '–' + (price + 5);
+  document.getElementById('distance').textContent =
+    'تقدير تجريبي وليس سعراً مؤكداً';
+}
+
+function bookRide() {
+  const from = document.getElementById('from').value.trim();
+  const to = document.getElementById('to').value.trim();
+  const people = document.getElementById('people').value;
+  const kind = document.getElementById('kind');
+  const kindText = kind.options[kind.selectedIndex].text;
+  const tripText = {
+    now: 'هلّق',
+    later: 'حجز مسبق',
+    return: 'ذهاب وإياب'
+  }[trip];
+
+  if (!from || !to) {
+    alert('اكتب نقطة الانطلاق والوجهة أولاً.');
+    return;
+  }
+
+  
+  
+const message = `🚕 طلب مشوار جديد - Alo Beka'a Taxi
+📍 الانطلاق: ${from}
+🏁 الوجهة: ${to}
+🚘 نوع السيارة: ${kindText}
+👥 عدد الركاب: ${people}
+🕒 نوع الطلب: ${tripText}
+💰 السعر الظاهر تجريبي: ${document.getElementById('amount').textContent}`;
+
+
+  const url = 'https://wa.me/96170307104?text=' +
+    encodeURIComponent(message);
+
+  window.open(url, '_blank');
+}
+
+function fillFromLocation() {
+  alert('تحديد GPS غير مفعّل بعد. اكتب عنوانك يدوياً.');
+}
+
+function toggleDriver(button) {
+  driverOnline = !driverOnline;
+  document.getElementById('driverStatus').textContent =
+    driverOnline ? 'متصل (تجريبي)' : 'غير متصل';
+  button.classList.toggle('active', driverOnline);
+}
+
+document.getElementById('from').addEventListener('input', estimate);
+document.getElementById('to').addEventListener('input', estimate);
+document.getElementById('kind').addEventListener('change', estimate);
+estimate();
 </script></body></html>
